@@ -9,14 +9,18 @@ import java.util.List;
 @SpringBootApplication
 public class BookaroOnlineStoreApplication implements CommandLineRunner {
 
+    public BookaroOnlineStoreApplication(CatalogService catalogService) {
+        this.catalogService = catalogService;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(BookaroOnlineStoreApplication.class, args);
     }
 
+    private final CatalogService catalogService;
+
     @Override
     public void run(String... args) throws Exception {
-        // tutaj
-        CatalogService catalogService = new CatalogService();
         List<Book> books = catalogService.findByTitle("Pan Tadeusz");
         books.forEach(System.out::println);
     }
