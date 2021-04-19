@@ -1,25 +1,15 @@
 package pl.appstudiomr.bookaro.catalog.domain;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+@RequiredArgsConstructor
+@ToString
+@Getter
 public class Book {
-    Long id;
-    String title;
-    String author;
-    Integer year;
-
-    public Book(Long id, String title, String author, Integer year) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                '}';
-    }
+    private final Long id;
+    private final String title;
+    private final String author;
+    private final Integer year;
 }
