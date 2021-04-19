@@ -1,4 +1,4 @@
-package pl.appstudiomr.bookaro;
+package pl.appstudiomr.bookaro.catalog.domain;
 
 public class Book {
     Long id;
