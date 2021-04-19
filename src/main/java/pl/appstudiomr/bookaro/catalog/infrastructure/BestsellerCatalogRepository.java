@@ -1,5 +1,6 @@
 package pl.appstudiomr.bookaro.catalog.infrastructure;
 
+import org.springframework.stereotype.Repository;
 import pl.appstudiomr.bookaro.catalog.domain.Book;
 import pl.appstudiomr.bookaro.catalog.domain.CatalogRepository;
 
@@ -8,7 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BestsellerCatalogRepository implements CatalogRepository {
+@Repository
+class BestsellerCatalogRepository implements CatalogRepository {
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
 
     public BestsellerCatalogRepository() {
