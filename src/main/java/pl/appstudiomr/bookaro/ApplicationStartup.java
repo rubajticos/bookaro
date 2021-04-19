@@ -12,19 +12,29 @@ import java.util.List;
 public class ApplicationStartup implements CommandLineRunner {
     private final CatalogController catalogController;
     private final String title;
+    private final String author;
     private final Long limit;
 
     ApplicationStartup(CatalogController catalogController,
                        @Value("${bookaro.catalog.query}") String title,
+                       @Value("${bookaro.catalog.queryAuthor}") String author,
                        @Value("${bookaro.catalog.limit:3}") Long limit) {
         this.catalogController = catalogController;
         this.title = title;
+        this.author = author;
         this.limit = limit;
     }
 
     @Override
     public void run(String... args) {
-        List<Book> books = catalogController.findByTitle(title);
-        books.stream().limit(limit).forEach(System.out::println);
+        System.out.println("Books by title:");
+        List<Book> booksByTitle = catalogController.findByTitle(title);
+        booksByTitle.stream().limit(limit).forEach(System.out::println);
+
+        System.out.println("----------");
+
+        System.out.println("Books by author:");
+        List<Book> booksByAuthor = catalogController.findByAuthor(author);
+        booksByAuthor.stream().limit(limit).forEach(System.out::println);
     }
 }
