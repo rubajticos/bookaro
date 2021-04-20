@@ -17,7 +17,7 @@ public class Order {
     private LocalDateTime createdAt;
     private Long id;
 
-    BigDecimal totalPrice() {
+    public BigDecimal totalPrice() {
         return items.stream()
                 .map(item -> item.getBook().getPrice().multiply(new BigDecimal(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

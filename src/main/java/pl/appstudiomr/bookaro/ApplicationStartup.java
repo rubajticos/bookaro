@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase;
 import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.appstudiomr.bookaro.catalog.domain.Book;
+import pl.appstudiomr.bookaro.order.application.port.PlaceOrderUseCase;
+import pl.appstudiomr.bookaro.order.application.port.PlaceOrderUseCase.PlaceOrderCommand;
+import pl.appstudiomr.bookaro.order.application.port.QueryOrderUseCase;
+import pl.appstudiomr.bookaro.order.domain.OrderItem;
+import pl.appstudiomr.bookaro.order.domain.Recipient;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,12 +21,18 @@ public class ApplicationStartup implements CommandLineRunner {
     private final String title;
     private final String author;
     private final Long limit;
+    private PlaceOrderUseCase placeOrder;
+    private QueryOrderUseCase queryOrder;
 
     ApplicationStartup(CatalogUseCase catalog,
+                       PlaceOrderUseCase placeOrder,
+                       QueryOrderUseCase queryOrder,
                        @Value("${bookaro.catalog.query}") String title,
                        @Value("${bookaro.catalog.queryAuthor}") String author,
                        @Value("${bookaro.catalog.limit:3}") Long limit) {
         this.catalog = catalog;
+        this.placeOrder = placeOrder;
+        this.queryOrder = queryOrder;
         this.title = title;
         this.author = author;
         this.limit = limit;
@@ -35,10 +46,10 @@ public class ApplicationStartup implements CommandLineRunner {
     }
 
     private void initData() {
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal(20)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal(25)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal(34)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("24.99")));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal("19.90")));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal("29.90")));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal("11.90")));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("14.90")));
     }
 
     private void searchCatalog() {
@@ -51,6 +62,29 @@ public class ApplicationStartup implements CommandLineRunner {
     }
 
     private void placeOrder() {
+        Book panTadeusz = catalog.findOneByTitle("Pan Tadeusz").orElseThrow(() -> new IllegalStateException("Cannot find a book"));
+        Book chlopi = catalog.findOneByTitle("Chłopi").orElseThrow(() -> new IllegalStateException("Cannot find a book"));
+
+        Recipient recipient = Recipient.builder()
+                .name("Jan Kowalski")
+                .phone("123-546-789")
+                .street("Armii Krajowej 31")
+                .city("Krakow")
+                .zipCode("31-150")
+                .email("jan@example.com")
+                .build();
+
+        PlaceOrderCommand command = PlaceOrderCommand.builder()
+                .recipient(recipient)
+                .item(new OrderItem(panTadeusz, 16))
+                .item(new OrderItem(chlopi, 7))
+                .build();
+
+        PlaceOrderUseCase.PlaceOrderResponse response = placeOrder.placeOrder(command);
+        System.out.println("Created ORDER with id: " + response.getOrderId());
+
+        queryOrder.findAll()
+                .forEach(order -> System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order));
     }
 
     private void findByAuthor() {
