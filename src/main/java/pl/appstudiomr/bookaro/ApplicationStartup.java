@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase;
+import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.appstudiomr.bookaro.catalog.domain.Book;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public class ApplicationStartup implements CommandLineRunner {
         findByTitle();
         System.out.println("----------");
         findByAuthor();
+
+        findAndUpdate();
+        findByTitle();
     }
 
     private void initData() {
@@ -50,5 +54,15 @@ public class ApplicationStartup implements CommandLineRunner {
         System.out.println("Books by title:");
         List<Book> booksByTitle = catalog.findByTitle(title);
         booksByTitle.stream().limit(limit).forEach(System.out::println);
+    }
+
+    private void findAndUpdate() {
+        System.out.println("Updating book.....");
+        catalog.findOneByTitleAndAuthor("Pan Tadeusz", "Adam Mickiewicz")
+                .ifPresent(book -> {
+                    UpdateBookCommand command = new UpdateBookCommand(book.getId(), "Pan Tadeusz czyli Ostatni Zajazd na Litwie", book.getAuthor(), book.getYear());
+                    catalog.updateBook(command);
+                });
+
     }
 }
