@@ -30,6 +30,18 @@ public class ApplicationStartup implements CommandLineRunner {
     @Override
     public void run(String... args) {
         initData();
+        searchCatalog();
+        placeOrder();
+    }
+
+    private void initData() {
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal(20)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal(25)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal(34)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("24.99")));
+    }
+
+    private void searchCatalog() {
         findByTitle();
         System.out.println("----------");
         findByAuthor();
@@ -38,11 +50,7 @@ public class ApplicationStartup implements CommandLineRunner {
         findByTitle();
     }
 
-    private void initData() {
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal(20)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal(25)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal(34)));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("24.99")));
+    private void placeOrder() {
     }
 
     private void findByAuthor() {
