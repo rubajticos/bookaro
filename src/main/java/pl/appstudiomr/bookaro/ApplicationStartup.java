@@ -7,6 +7,7 @@ import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase;
 import pl.appstudiomr.bookaro.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.appstudiomr.bookaro.catalog.domain.Book;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -38,10 +39,10 @@ public class ApplicationStartup implements CommandLineRunner {
     }
 
     private void initData() {
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904));
-        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal(20)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Ogniem i Mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal(25)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal(34)));
+        catalog.addBook(new CatalogUseCase.CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("24.99")));
     }
 
     private void findByAuthor() {
